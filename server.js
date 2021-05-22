@@ -15,12 +15,33 @@ var server = http.createServer(function(request, response) {
 	/******** 从这里开始看，上面不要看 ************/
 
 	console.log("有发送请求，路径（带查询参数）为：" + pathWithQuery);
-	if (path === "/home.html") {
+	if (path === "/logout") {
 		let cookie = request.headers["cookie"];
 		let session = JSON.parse(fs.readFileSync("db/session.json").toString());
 		let sessionId;
 		try {
-			sessionId = cookie.match(/(?<=session_id\s*=).*/g)[0];
+			sessionId = cookie.match(/(?<=session_id\s*=)\d*\.\d*/g)[0];
+		} catch (error) { }
+		console.log(session[sessionId]);
+		if (session[sessionId]) {
+			for (let key in session) {
+				if (key === sessionId) {
+					
+					delete session[key];
+					fs.writeFileSync("db/session.json", JSON.stringify(session));
+					//console.log(session);
+				}
+			}
+		} else {
+            
+		}
+		response.end();
+	} else if (path === "/home.html") {
+		let cookie = request.headers["cookie"];
+		let session = JSON.parse(fs.readFileSync("db/session.json").toString());
+		let sessionId;
+		try {
+			sessionId = cookie.match(/(?<=session_id\s*=)\d*\.\d*/g)[0];
 		} catch (error) { }
         
 		console.log(session[sessionId]);

@@ -10,6 +10,22 @@
 <body>
     {{username}}{{userState}}
     <a href="/login.html">登录</a>
-    <script src=""></script>
+    <a href="/logout" class="logoutBtn">退出</a>
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+        let $logout = $(".logoutBtn");
+ 
+        $logout.click((e) => {
+        	
+        	e.preventDefault();
+        	$.ajax({
+        		type:"POST",
+        		url:"/logout"
+        	}).then(() => {
+        		location.href = "/home.html";
+        	}, () => {});
+        });
+    </script>
+
 </body>
 </html>
